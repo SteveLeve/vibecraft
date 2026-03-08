@@ -11,8 +11,7 @@ vibecraft/
 ├── agent/                    # VibeCraft AGENT files (run Claude from here to BUILD in Minecraft)
 │   ├── .claude/skills/       # 7 building skills (worldedit, structures, terrain, etc.)
 │   ├── context/              # AI reference guides (MD files agent reads)
-│   ├── CLAUDE.md             # Agent system prompt
-│   └── AGENTS.md             # Source for agent prompt (copied to CLAUDE.md)
+│   └── AGENTS.md             # Agent system prompt (run `claude` from this folder)
 │
 ├── mcp-server/               # MCP SERVER CODE (Python)
 │   ├── src/vibecraft/
@@ -44,7 +43,7 @@ claude  # Start Claude Code as the building agent
 ```
 
 Then iterate on:
-- **`agent/CLAUDE.md`** — The agent's system prompt (auto-generated from AGENTS.md)
+- **`agent/AGENTS.md`** — The agent's system prompt
 - **`agent/.claude/skills/`** — Building skills that teach the agent specific workflows
 - **`agent/context/`** — Reference materials the agent can read
 
@@ -72,6 +71,7 @@ The core Python server that provides MCP tools to AI clients.
 | `tools/core_tools.py` | RCON, WorldEdit generic handlers |
 | `tools/worldedit_*.py` | WorldEdit-specific tools |
 | `rcon_manager.py` | Minecraft RCON connection |
+| `client_bridge.py` | Client bridge for WorldEdit commands (preferred over RCON) |
 | `code_sandbox.py` | Safe Python execution for procedural builds |
 | `tool_schemas.py` | MCP tool definitions and schemas |
 
@@ -82,10 +82,15 @@ Files consumed by the VibeCraft building agent.
 | File | Purpose |
 |------|---------|
 | `.claude/skills/` | Building skills with detailed workflows |
-| `context/` | JSON catalogs (items, patterns, templates) |
-| `AGENTS.md` | Master agent instructions (source for CLAUDE.md) |
+| `context/` | Reference guides (Markdown files the agent reads) |
+| `AGENTS.md` | Agent system prompt |
 
 ## Development Commands
+
+```bash
+# Install dependencies (first time)
+cd mcp-server && uv sync
+```
 
 ```bash
 # Start Minecraft server
@@ -129,6 +134,17 @@ Skills are in `agent/.claude/skills/`. Each skill has:
 - Optional supporting `.md` files
 
 The skill description in YAML frontmatter controls when it triggers.
+
+## Development Skills
+
+Claude Code skills for VibeCraft development live in `.claude/skills/` (project root). They auto-trigger when you describe the relevant task.
+
+| Skill | Triggers when... |
+|-------|-----------------|
+| `add-mcp-tool` | Adding a new tool to the MCP server |
+| `debug-connection` | Connection errors, player not found, WebSocket/SSE failures |
+| `write-tests` | Writing pytest tests for handlers or modules |
+| `update-agent-skills` | Modifying agent behavior or building skills |
 
 ## Testing with Minecraft
 
