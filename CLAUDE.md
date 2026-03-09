@@ -88,15 +88,15 @@ Files consumed by the VibeCraft building agent.
 ## Development Commands
 
 ```bash
-# Install dependencies (first time)
-cd mcp-server && uv sync
+# Install dependencies (first time, includes dev tools like pytest)
+cd mcp-server && uv sync --extra dev
 ```
 
 ```bash
 # Start Minecraft server
 docker compose up -d
 
-# Run MCP server (stdio mode)
+# Run MCP server (stdio mode, from terminal)
 cd mcp-server && uv run python -m src.vibecraft.server
 
 # Run MCP server (HTTP/SSE mode for debugging)
@@ -111,6 +111,12 @@ cd mcp-server && uv run mypy src/
 # Linting
 cd mcp-server && uv run ruff check src/
 ```
+
+> **Claude Code MCP config (`agent/.mcp.json`):** Use the venv Python directly — `uv run` fails
+> in Claude Code's subprocess because PATH is not inherited. Correct command:
+> `"command": "mcp-server/.venv/bin/python"`, `"args": ["-m", "vibecraft.server"]`
+>
+> **SSE transport config:** Claude Code uses `"type": "sse"`, not `"transport": "sse"`.
 
 ## Common Development Tasks
 
@@ -162,7 +168,14 @@ Claude Code skills for VibeCraft development live in `.claude/skills/` (project 
 
 ## Important Notes
 
+### Code Sandbox (`build()` tool)
+- `import` is **blocked** — never use `import math` or `import random` in build() code or agent/context/ examples
+- Pre-injected: `sin`, `cos`, `tan`, `radians`, `degrees`, `sqrt`, `pi`, `e`, `floor`, `ceil`, `log`, `atan2` (from math), plus `random` (a `random.Random(42)` instance)
+- `def` functions **are allowed** — agents can define helpers inside a single `build()` call
+- Tests: `mcp-server/tests/test_sandbox.py`; the `__main__` block in `code_sandbox.py` also documents blocked operations
+
 - WorldEdit commands via RCON need player context (`execute as <player>`)
 - Brush/tool commands don't work via RCON (require player interaction)
 - The `build()` tool auto-wraps `//` commands with player context
 - Always test changes with an actual Minecraft client connected
+- `agent/.mcp.json` is gitignored (`.gitignore` line 32) — create locally, never commit

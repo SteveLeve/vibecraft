@@ -111,9 +111,32 @@ for x in range(cx - major_r - minor_r, cx + major_r + minor_r + 1):
 /generate stone y<sin(x/5)*3+64                    # Sine wave
 ```
 
+## Helper Functions
+
+Define reusable helpers at the top of your code — they work within a single `build()` call:
+
+```python
+commands = []
+BASE_X, BASE_Y, BASE_Z = -34, 64, 56
+
+def fill(x1, y1, x2, y2, block):
+    commands.append(f"/fill {BASE_X+x1} {BASE_Y+y1} {BASE_Z} {BASE_X+x2} {BASE_Y+y2} {BASE_Z} {block}")
+
+def circle_fill(cx, cy, r, block):
+    for dx in range(-r, r + 1):
+        for dy in range(-r, r + 1):
+            if dx*dx + dy*dy <= r*r:
+                fill(cx+dx, cy+dy, cx+dx, cy+dy, block)
+
+fill(0, 0, 195, 127, "minecraft:white_concrete")
+circle_fill(97, 63, 20, "minecraft:red_concrete")
+```
+
+Also available without importing: `random.randint(a, b)`, `random.choice(seq)`, `random.random()`, `random.seed(n)`, `random.uniform(a, b)`
+
 ## Code Sandbox Limits
-**Allowed**: `for` loops, list comprehensions, math ops, `math` module
-**NOT Allowed**: `while`, `def`, `lambda`, imports (except math), `try/except`
+**Allowed**: `for` loops, `def` functions, list comprehensions, math ops, `random`
+**NOT Allowed**: `while`, `lambda`, `import`, `try/except`, `class`, async
 **Limits**: 10,000 commands max, 100,000 iterations max
 
 ## Distance Functions

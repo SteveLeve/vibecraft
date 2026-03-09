@@ -206,7 +206,7 @@ for x in range(cx - major_radius - minor_radius, cx + major_radius + minor_radiu
 ```python
 build(code="""
 commands = []
-import random
+# random and math functions are available without importing
 random.seed(42)  # Reproducible
 
 base_x, base_y, base_z = 100, 64, 200
@@ -236,7 +236,6 @@ for x in range(base_x - crown_radius, base_x + crown_radius + 1):
 ```python
 build(code="""
 commands = []
-import random
 random.seed(123)
 
 cx, cy, cz = 105, 65, 205
@@ -267,8 +266,6 @@ for x in range(cx - base_radius - 2, cx + base_radius + 3):
 ```python
 build(code="""
 commands = []
-import random
-import math
 random.seed(456)
 
 start_x, start_y, start_z = 100, 70, 200
@@ -380,7 +377,6 @@ for x in range(base_x, base_x + size):
 ```python
 build(code="""
 commands = []
-import math
 
 base_x, base_z = 100, 200
 length = 60
@@ -390,7 +386,7 @@ base_y = 64
 for i in range(length):
     # Sinusoidal path
     path_z = base_z + i
-    path_x = base_x + int(math.sin(i * 0.1) * 10)
+    path_x = base_x + int(sin(i * 0.1) * 10)
     
     # Carve valley
     for dx in range(-width//2, width//2 + 1):
@@ -416,7 +412,6 @@ for i in range(length):
 ```python
 build(code="""
 commands = []
-import math
 
 cx, cz = 105, 205
 base_y = 64
@@ -425,18 +420,18 @@ radius = 4
 steps_per_rotation = 12
 
 for step in range(height * steps_per_rotation // 4):
-    angle = step * (2 * math.pi / steps_per_rotation)
+    angle = step * (2 * pi / steps_per_rotation)
     y = base_y + step // 3  # Rise every 3 steps
-    
-    x = int(cx + math.cos(angle) * radius)
-    z = int(cz + math.sin(angle) * radius)
-    
+
+    x = int(cx + cos(angle) * radius)
+    z = int(cz + sin(angle) * radius)
+
     # Determine stair facing based on angle
-    if 0 <= angle < math.pi/2:
+    if 0 <= angle < pi/2:
         facing = 'west'
-    elif angle < math.pi:
+    elif angle < pi:
         facing = 'north'
-    elif angle < 3*math.pi/2:
+    elif angle < 3*pi/2:
         facing = 'east'
     else:
         facing = 'south'
@@ -450,7 +445,6 @@ for step in range(height * steps_per_rotation // 4):
 ```python
 build(code="""
 commands = []
-import math
 
 base_x, base_y, base_z = 100, 64, 200
 width = 7  # Odd number for center
@@ -480,7 +474,6 @@ for y in range(height):
 ```python
 build(code="""
 commands = []
-import math
 
 cx, cy, cz = 105, 75, 200
 radius = 6
@@ -488,33 +481,33 @@ petals = 8
 
 # Outer ring
 for angle_deg in range(360):
-    angle = math.radians(angle_deg)
-    x = int(cx + math.cos(angle) * radius)
-    y = int(cy + math.sin(angle) * radius)
+    angle = radians(angle_deg)
+    x = int(cx + cos(angle) * radius)
+    y = int(cy + sin(angle) * radius)
     commands.append(f'/setblock {x} {y} {cz} stone_bricks')
 
 # Petal dividers
 for i in range(petals):
-    angle = math.radians(i * 360 / petals)
+    angle = radians(i * 360 / petals)
     for r in range(1, radius):
-        x = int(cx + math.cos(angle) * r)
-        y = int(cy + math.sin(angle) * r)
+        x = int(cx + cos(angle) * r)
+        y = int(cy + sin(angle) * r)
         commands.append(f'/setblock {x} {y} {cz} stone')
 
 # Fill petals with colored glass
-colors = ['red_stained_glass', 'orange_stained_glass', 'yellow_stained_glass', 
+colors = ['red_stained_glass', 'orange_stained_glass', 'yellow_stained_glass',
           'lime_stained_glass', 'blue_stained_glass', 'purple_stained_glass',
           'magenta_stained_glass', 'cyan_stained_glass']
 
 for i in range(petals):
-    start_angle = math.radians(i * 360 / petals + 360 / petals / 4)
-    end_angle = math.radians((i + 1) * 360 / petals - 360 / petals / 4)
-    
+    start_angle = radians(i * 360 / petals + 360 / petals / 4)
+    end_angle = radians((i + 1) * 360 / petals - 360 / petals / 4)
+
     for r in range(2, radius - 1):
         for angle_offset in range(-15, 16, 5):
-            angle = start_angle + math.radians(angle_offset)
-            x = int(cx + math.cos(angle) * r)
-            y = int(cy + math.sin(angle) * r)
+            angle = start_angle + radians(angle_offset)
+            x = int(cx + cos(angle) * r)
+            y = int(cy + sin(angle) * r)
             commands.append(f'/setblock {x} {y} {cz} {colors[i % len(colors)]}')
 """, description="Gothic rose window")
 ```
@@ -641,7 +634,6 @@ for y in range(height):
 ```python
 build(code="""
 commands = []
-import math
 
 cx, cz = 105, 205
 base_y = 64
@@ -654,12 +646,12 @@ windows_per_level = 4
 # Build cylindrical wall
 for y in range(base_y, base_y + height):
     for angle_deg in range(360):
-        angle = math.radians(angle_deg)
+        angle = radians(angle_deg)
         
         # Outer wall
-        x = int(cx + math.cos(angle) * radius)
-        z = int(cz + math.sin(angle) * radius)
-        
+        x = int(cx + cos(angle) * radius)
+        z = int(cz + sin(angle) * radius)
+
         # Check if this is a window position
         is_window = False
         if (y - base_y) % window_interval == 3:  # Window row
@@ -683,9 +675,9 @@ for y in range(height, height + 8):
     if roof_radius < 1:
         break
     for angle_deg in range(360):
-        angle = math.radians(angle_deg)
-        x = int(cx + math.cos(angle) * roof_radius)
-        z = int(cz + math.sin(angle) * roof_radius)
+        angle = radians(angle_deg)
+        x = int(cx + cos(angle) * roof_radius)
+        z = int(cz + sin(angle) * roof_radius)
         commands.append(f'/setblock {x} {base_y + y} {z} dark_oak_planks')
 """, description="Tower with windows and roof")
 ```
@@ -695,7 +687,6 @@ for y in range(height, height + 8):
 ```python
 build(code="""
 commands = []
-import math
 
 start_x, end_x = 100, 130
 base_y = 64
@@ -707,7 +698,7 @@ length = end_x - start_x
 for x in range(start_x, end_x + 1):
     # Parabolic arc
     progress = (x - start_x) / length
-    arc = math.sin(progress * math.pi) * arc_height
+    arc = sin(progress * pi) * arc_height
     y = int(base_y + arc)
     
     # Bridge surface
@@ -730,7 +721,6 @@ for x in range(start_x, end_x + 1):
 ```python
 build(code="""
 commands = []
-import math
 
 cx, cz = 105, 205
 base_y = 64
@@ -743,16 +733,16 @@ for y in range(base_y, base_y + height):
     # Radius decreases as we go up
     radius = base_radius - (base_radius - top_radius) * progress
     # Spiral offset
-    spiral_offset = progress * 4 * math.pi  # 2 full rotations
-    
+    spiral_offset = progress * 4 * pi  # 2 full rotations
+
     for angle_deg in range(360):
-        angle = math.radians(angle_deg) + spiral_offset
-        x = int(cx + math.cos(angle) * radius)
-        z = int(cz + math.sin(angle) * radius)
-        
+        angle = radians(angle_deg) + spiral_offset
+        x = int(cx + cos(angle) * radius)
+        z = int(cz + sin(angle) * radius)
+
         # Only outer shell
-        inner_x = int(cx + math.cos(angle) * (radius - 1))
-        inner_z = int(cz + math.sin(angle) * (radius - 1))
+        inner_x = int(cx + cos(angle) * (radius - 1))
+        inner_z = int(cz + sin(angle) * (radius - 1))
         
         if (x, z) != (inner_x, inner_z):
             commands.append(f'/setblock {x} {y} {z} prismarine')
@@ -827,19 +817,15 @@ if (dist_xz - major_radius)**2 + (y-cy)**2 <= minor_radius**2:
 y = base_y + int(amplitude * sin(x * 0.1))
 
 # Exponential decay (for trees, mountains):
-value = amplitude * math.exp(-distance / falloff)
+value = amplitude * exp(-distance / falloff)
 ```
 
 ### Randomization Seeds
 
 ```python
-# For reproducible "random" builds:
-import random
-random.seed(42)  # Same seed = same result
-
-# For unique builds each time:
-import random
-random.seed()  # Uses current time
+# random is available without importing — it's a seeded Random instance (seed=42 by default)
+random.seed(42)  # Same seed = same result every run
+random.seed()    # Reset to time-based seed for unique builds
 ```
 
 ---
@@ -859,13 +845,12 @@ commands.append('//pos2 115,80,215')
 commands.append('//sphere stone 10')
 
 # Then add procedural details with setblock
-import random
 random.seed(42)
 for i in range(50):  # Random crystals
     angle = random.uniform(0, 6.28)
     y = random.randint(65, 75)
-    x = int(105 + random.uniform(8, 12) * math.cos(angle))
-    z = int(205 + random.uniform(8, 12) * math.sin(angle))
+    x = int(105 + random.uniform(8, 12) * cos(angle))
+    z = int(205 + random.uniform(8, 12) * sin(angle))
     commands.append(f'/setblock {x} {y} {z} amethyst_block')
 """, description="Geode with crystals")
 ```

@@ -13,8 +13,10 @@ Agent Skills for Minecraft building with VibeCraft MCP tools. Claude Code automa
 | **choosing-materials** | 66 | "palette", "materials", "colors" | 60-30-10 rule, 10 palettes |
 | **using-worldedit** | 134 | "worldedit", "//set", "//replace" | Commands, patterns, masks, expressions |
 | **creating-shapes** | 139 | "sphere", "dome", "pyramid" | build() code, shape formulas |
+| **command-blocks** | ~130 | "command block", "scoreboard", "tellraw", "game logic" | Block types, /execute, /scoreboard, chains, triggers |
+| **mini-game-systems** | ~180 | "mini-game", "arena", "lobby", "adventure map", "checkpoint" | Game state machines, win conditions, portals, resets |
 
-**Total**: ~936 lines (compressed from ~2,500 lines - 63% reduction)
+**Total**: ~1,246 lines
 
 ## How Skills Work
 
@@ -41,6 +43,8 @@ Skills are automatic. Just describe what you want:
 "Generate mountain terrain"   → generating-terrain skill
 "Furnish the bedroom"         → placing-furniture skill
 "Choose materials for gothic" → choosing-materials skill
+"Add a scoreboard and win condition" → command-blocks + mini-game-systems skills
+"Build a lobby hub with portals" → mini-game-systems skill
 ```
 
 ## MCP Tools Available

@@ -14,6 +14,7 @@ No external dependencies required!
 
 import ast
 import math
+import random as _random
 import signal
 import sys
 from contextlib import contextmanager
@@ -171,11 +172,16 @@ ALLOWED_NODES: Set[type] = {
     # String formatting (for f-strings)
     ast.JoinedStr,
     ast.FormattedValue,
+    # Function definitions (safe: __builtins__={}, blocked attrs/names enforced inside)
+    ast.FunctionDef,
+    ast.Return,
+    ast.arguments,
+    ast.arg,
 }
 
 # NOTE: Explicitly NOT allowed:
-# - ast.FunctionDef (prevents function definitions that could escape)
-# - ast.Return (not needed without functions)
+# - ast.AsyncFunctionDef, ast.Lambda (async/closure escapes)
+# - ast.Return is now allowed (needed for FunctionDef)
 # - ast.Import, ast.ImportFrom (no imports)
 # - ast.With (no context managers)
 # - ast.Try, ast.Raise (no exception handling - simplifies security)
@@ -441,6 +447,8 @@ def _create_safe_namespace() -> Dict[str, Any]:
         "e": math.e,
         # Safe output (no-op)
         "print": safe_print,
+        # Random number generation (seeded instance — deterministic by default)
+        "random": _random.Random(42),
         # CRITICAL: Empty builtins prevents access to dangerous functions
         "__builtins__": {},
     }
@@ -618,7 +626,6 @@ for x in range(100, 110):
         ("exec() call", "commands = []\nexec('pass')"),
         ("open() call", "commands = []\nopen('/etc/passwd')"),
         ("getattr() call", "commands = []\ngetattr(str, 'upper')"),
-        ("Function definition", "commands = []\ndef foo(): pass"),
         ("Lambda expression", "commands = []\nf = lambda x: x"),
         ("Dunder variable", "commands = []\n__name__"),
         ("Range too large", "commands = []\nfor i in range(1000000): pass"),
