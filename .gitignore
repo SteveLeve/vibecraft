@@ -67,3 +67,4 @@ minecraft-server/*
 
 archive/*
 voxel-test/
+.claude.local.md
