@@ -9,6 +9,9 @@ base {
 version = project.mod_version
 group = project.maven_group
 
+def configuredJavaVersion = (project.findProperty('java_version') ?: '21').toString()
+def configuredJavaLanguageVersion = JavaLanguageVersion.of(configuredJavaVersion.toInteger())
+
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabricmc.net/' }
@@ -38,8 +41,11 @@ loom {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = configuredJavaLanguageVersion
+    }
+    sourceCompatibility = JavaVersion.toVersion(configuredJavaVersion)
+    targetCompatibility = JavaVersion.toVersion(configuredJavaVersion)
     withSourcesJar()
 }
 

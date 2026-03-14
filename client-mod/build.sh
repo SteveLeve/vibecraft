@@ -56,6 +56,41 @@ LOADER_VERSION=$(jq -r ".versions[\"$VERSION\"].loader_version" "$VERSIONS_FILE"
 FABRIC_VERSION=$(jq -r ".versions[\"$VERSION\"].fabric_version" "$VERSIONS_FILE")
 JAVA_VERSION=$(jq -r ".versions[\"$VERSION\"].java_version" "$VERSIONS_FILE")
 
+# Validate that a matching JDK (not just JRE) is available
+if ! command -v javac &> /dev/null; then
+    echo -e "${RED}Error: javac not found.${NC}"
+    echo "Install a full JDK $JAVA_VERSION (not just Java runtime/JRE) and try again."
+    exit 1
+fi
+
+JAVAC_BIN="$(command -v javac)"
+JDK_HOME="$(dirname "$(dirname "$(readlink -f "$JAVAC_BIN")")")"
+
+if [[ ! -x "$JDK_HOME/bin/javac" ]]; then
+    echo -e "${RED}Error: Could not resolve a valid JDK home from javac.${NC}"
+    echo "Resolved path: $JDK_HOME"
+    echo "Set JAVA_HOME to a full JDK $JAVA_VERSION installation and retry."
+    exit 1
+fi
+
+JAVAC_VERSION_RAW="$($JDK_HOME/bin/javac -version 2>&1)"
+JAVAC_VERSION="$(echo "$JAVAC_VERSION_RAW" | awk '{print $2}')"
+JAVAC_MAJOR="$(echo "$JAVAC_VERSION" | cut -d. -f1)"
+
+# Handle legacy format like 1.8.x if ever encountered
+if [[ "$JAVAC_MAJOR" == "1" ]]; then
+    JAVAC_MAJOR="$(echo "$JAVAC_VERSION" | cut -d. -f2)"
+fi
+
+if [[ "$JAVAC_MAJOR" != "$JAVA_VERSION" ]]; then
+    echo -e "${RED}Error: JDK version mismatch.${NC}"
+    echo "Requested Java: $JAVA_VERSION"
+    echo "Detected javac: $JAVAC_VERSION_RAW"
+    echo "JDK home: $JDK_HOME"
+    echo "Switch to JDK $JAVA_VERSION (e.g. set JAVA_HOME) and run again."
+    exit 1
+fi
+
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}  VibeCraft Client Mod Builder${NC}"
 echo -e "${BLUE}========================================${NC}"
@@ -65,6 +100,7 @@ echo -e "Yarn:         $YARN_MAPPINGS"
 echo -e "Fabric Loader: $LOADER_VERSION"
 echo -e "Fabric API:   $FABRIC_VERSION"
 echo -e "Java:         $JAVA_VERSION"
+echo -e "JDK Home:     $JDK_HOME"
 echo ""
 
 # Update gradle.properties
@@ -76,6 +112,7 @@ minecraft_version=$MC_VERSION
 yarn_mappings=$YARN_MAPPINGS
 loader_version=$LOADER_VERSION
 fabric_version=$FABRIC_VERSION
+java_version=$JAVA_VERSION
 java_websocket_version=1.5.7
 
 mod_version=0.1.0
@@ -85,11 +122,11 @@ EOF
 
 # Clean previous build
 echo -e "${YELLOW}Cleaning previous build...${NC}"
-./gradlew clean --quiet
+JAVA_HOME="$JDK_HOME" ./gradlew -Dorg.gradle.java.home="$JDK_HOME" clean --quiet
 
 # Build
 echo -e "${YELLOW}Building mod...${NC}"
-./gradlew build
+JAVA_HOME="$JDK_HOME" ./gradlew -Dorg.gradle.java.home="$JDK_HOME" build
 
 # Check if build succeeded
 JAR_FILE="build/libs/vibecraft-client-0.1.0.jar"

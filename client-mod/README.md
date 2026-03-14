@@ -20,9 +20,16 @@ Output: `build/release/vibecraft-client-0.1.0-mc<VERSION>.jar`
 
 ## Build Requirements
 
-- **Java 21** (for Minecraft 1.21.x) or **Java 17** (for 1.20.x)
+- **Full JDK** (not JRE): Java 21 for Minecraft 1.21.x, Java 17 for 1.20.x
 - **jq** for the build script: `brew install jq`
 - Gradle (included via wrapper)
+
+Verify your toolchain before building:
+
+```bash
+java -version
+javac -version
+```
 
 ## Manual Build
 
@@ -142,3 +149,6 @@ Check the game log for errors. Try `/vibecraft restart`.
 1. Make sure you have the correct Java version installed
 2. Run `./gradlew clean` then try again
 3. Check `versions.json` for correct dependency versions
+
+If you see `Toolchain installation ... does not provide the required capabilities: [JAVA_COMPILER]`,
+you have a runtime-only Java install. Install the matching full JDK and rerun `./build.sh <version>`.
