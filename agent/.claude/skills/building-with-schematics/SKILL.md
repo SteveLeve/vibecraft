@@ -39,7 +39,7 @@ description: PRIMARY BUILDING METHOD - Use for ALL construction tasks. Build str
 
 **10x10 floor with border (verbose: ~500 tokens, compact: ~50 tokens):**
 ```json
-{"a": [0,64,0], "p": {"S": "stone", "P": "planks"}, "l": [[0, "S*10|S P*8 S~8|S*10"]]}
+{"a": [0,64,0], "p": {"S": "stone", "P": "oak_planks"}, "l": [[0, "S*10|S P*8 S~8|S*10"]]}
 ```
 
 **5x5x4 hollow room (with layer range for walls):**
@@ -354,7 +354,7 @@ All block states with facing/axis are automatically rotated!
   "layers": [
     {"y": 0, "grid": [["Se","P","P","P","Sw"],["Se","P","P","P","Sw"]]},
     {"y": 1, "grid": [[".","Se","P","Sw","."],[".","Se","P","Sw","."]]},
-    {"y": 2, "grid": [[".",".","P",".","."],[".",".",".P",".","."]}
+    {"y": 2, "grid": [[".",".","P",".","."],[".",".",".","P","."]]}
   ]
 }
 ```
