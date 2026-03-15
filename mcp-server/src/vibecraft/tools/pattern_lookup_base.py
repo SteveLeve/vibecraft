@@ -45,7 +45,7 @@ class PatternLookupHandler:
         self.category_name = category_name
         self.logger = logger_instance
         self.has_structure_check = has_structure_check
-        self.patterns = []
+        self.patterns: list[dict[str, Any]] = []
 
     def load_patterns(self) -> List[TextContent]:
         """
@@ -100,7 +100,7 @@ class PatternLookupHandler:
         result_text = f"{self.emoji_prefix} **{self.category_name} Pattern Library** - {len(self.patterns)} patterns available\n\n"
 
         # Group by category
-        by_category = {}
+        by_category: dict[str, list[dict[str, Any]]] = {}
         for pattern in self.patterns:
             cat = pattern.get("category", "unknown")
             if cat not in by_category:
@@ -126,8 +126,8 @@ class PatternLookupHandler:
 
     def action_categories(self) -> List[TextContent]:
         """List all categories with counts."""
-        category_counts = {}
-        category_subcats = {}
+        category_counts: dict[str, int] = {}
+        category_subcats: dict[str, set[str]] = {}
 
         for pattern in self.patterns:
             cat = pattern.get("category", "unknown")
@@ -185,7 +185,7 @@ class PatternLookupHandler:
             ]
 
         # Group by subcategory
-        by_subcat = {}
+        by_subcat: dict[str, list[dict[str, Any]]] = {}
         for pattern in cat_patterns:
             subcat = pattern.get("subcategory", "none")
             if subcat not in by_subcat:
@@ -208,7 +208,7 @@ class PatternLookupHandler:
 
     def action_tags(self) -> List[TextContent]:
         """List all tags with usage counts."""
-        tag_counts = {}
+        tag_counts: dict[str, int] = {}
 
         for pattern in self.patterns:
             for tag in pattern.get("tags", []):
@@ -233,7 +233,7 @@ class PatternLookupHandler:
         query: str = "",
         category_filter: str = "",
         subcategory_filter: str = "",
-        tags_filter: List[str] = None,
+        tags_filter: List[str] | None = None,
     ) -> List[TextContent]:
         """Search for patterns by query, category, subcategory, or tags."""
         if tags_filter is None:

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_furniture_lookup(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle furniture_lookup tool.
@@ -279,6 +279,15 @@ async def handle_furniture_lookup(
             return [TextContent(type="text", text=result_text)]
 
         # Return full layout as formatted JSON
+        # layout is guaranteed non-None here: the not-found guard above would have returned
+        if layout is None:
+            return [
+                TextContent(
+                    type="text",
+                    text=f"❌ Furniture layout '{furniture_id}' not found.",
+                )
+            ]
+
         result_text = f"🪑 **{layout['name']}** (ID: `{layout['id']}`)\n\n"
 
         # Basic info
@@ -382,7 +391,7 @@ async def handle_furniture_lookup(
 
 
 async def handle_place_furniture(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle place_furniture tool.
@@ -434,9 +443,9 @@ async def handle_place_furniture(
     try:
         commands = FurniturePlacer.get_placement_commands(
             layout=layout,
-            origin_x=int(origin_x),
-            origin_y=int(origin_y),
-            origin_z=int(origin_z),
+            origin_x=int(origin_x or 0),
+            origin_y=int(origin_y or 0),
+            origin_z=int(origin_z or 0),
             facing=facing,
             place_on_surface=place_on_surface,
         )

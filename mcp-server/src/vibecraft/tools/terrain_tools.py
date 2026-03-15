@@ -5,12 +5,12 @@ This module contains handlers for terrain-related operations including
 analysis, generation, texturing, and smoothing.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from mcp.types import TextContent
 
 
 async def handle_generate_terrain(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle generate_terrain tool."""
     from ..terrain_generation import TerrainGenerator
@@ -33,73 +33,76 @@ async def handle_generate_terrain(
         generator = TerrainGenerator(rcon)
 
         # Call appropriate generation method based on type
+        cx1, cy1, cz1 = int(x1 or 0), int(y1 or 0), int(z1 or 0)
+        cx2, cy2, cz2 = int(x2 or 0), int(y2 or 0), int(z2 or 0)
+
         if terrain_type == "rolling_hills":
-            kwargs = {"x1": x1, "y1": y1, "z1": z1, "x2": x2, "y2": y2, "z2": z2}
-            if scale:
-                kwargs["scale"] = scale
-            if amplitude:
-                kwargs["amplitude"] = amplitude
-            if octaves:
-                kwargs["octaves"] = octaves
-            if smooth_iterations:
-                kwargs["smooth_iterations"] = smooth_iterations
-            if seed:
-                kwargs["seed"] = seed
-            result = generator.generate_hills(**kwargs)
+            hills_kwargs: Dict[str, Any] = {}
+            if scale is not None:
+                hills_kwargs["scale"] = int(scale)
+            if amplitude is not None:
+                hills_kwargs["amplitude"] = int(amplitude)
+            if octaves is not None:
+                hills_kwargs["octaves"] = int(octaves)
+            if smooth_iterations is not None:
+                hills_kwargs["smooth_iterations"] = int(smooth_iterations)
+            if seed is not None:
+                hills_kwargs["seed"] = int(seed)
+            result = generator.generate_hills(cx1, cy1, cz1, cx2, cy2, cz2, **hills_kwargs)
 
         elif terrain_type == "rugged_mountains":
-            kwargs = {"x1": x1, "y1": y1, "z1": z1, "x2": x2, "y2": y2, "z2": z2}
-            if scale:
-                kwargs["scale"] = scale
-            if amplitude:
-                kwargs["amplitude"] = amplitude
-            if octaves:
-                kwargs["octaves"] = octaves
-            if smooth_iterations:
-                kwargs["smooth_iterations"] = smooth_iterations
-            if seed:
-                kwargs["seed"] = seed
-            result = generator.generate_mountains(**kwargs)
+            mountains_kwargs: Dict[str, Any] = {}
+            if scale is not None:
+                mountains_kwargs["scale"] = int(scale)
+            if amplitude is not None:
+                mountains_kwargs["amplitude"] = int(amplitude)
+            if octaves is not None:
+                mountains_kwargs["octaves"] = int(octaves)
+            if smooth_iterations is not None:
+                mountains_kwargs["smooth_iterations"] = int(smooth_iterations)
+            if seed is not None:
+                mountains_kwargs["seed"] = int(seed)
+            result = generator.generate_mountains(cx1, cy1, cz1, cx2, cy2, cz2, **mountains_kwargs)
 
         elif terrain_type == "valley_network":
-            kwargs = {"x1": x1, "y1": y1, "z1": z1, "x2": x2, "y2": y2, "z2": z2}
-            if scale:
-                kwargs["scale"] = scale
-            if depth:
-                kwargs["depth"] = depth
-            if octaves:
-                kwargs["octaves"] = octaves
-            if smooth_iterations:
-                kwargs["smooth_iterations"] = smooth_iterations
-            if seed:
-                kwargs["seed"] = seed
-            result = generator.generate_valleys(**kwargs)
+            valleys_kwargs: Dict[str, Any] = {}
+            if scale is not None:
+                valleys_kwargs["scale"] = int(scale)
+            if depth is not None:
+                valleys_kwargs["depth"] = int(depth)
+            if octaves is not None:
+                valleys_kwargs["octaves"] = int(octaves)
+            if smooth_iterations is not None:
+                valleys_kwargs["smooth_iterations"] = int(smooth_iterations)
+            if seed is not None:
+                valleys_kwargs["seed"] = int(seed)
+            result = generator.generate_valleys(cx1, cy1, cz1, cx2, cy2, cz2, **valleys_kwargs)
 
         elif terrain_type == "mountain_range":
-            kwargs = {"x1": x1, "y1": y1, "z1": z1, "x2": x2, "y2": y2, "z2": z2}
-            if direction:
-                kwargs["direction"] = direction
-            if scale:
-                kwargs["scale"] = scale
-            if amplitude:
-                kwargs["amplitude"] = amplitude
-            if octaves:
-                kwargs["octaves"] = octaves
-            if smooth_iterations:
-                kwargs["smooth_iterations"] = smooth_iterations
-            if seed:
-                kwargs["seed"] = seed
-            result = generator.generate_mountain_range(**kwargs)
+            range_kwargs: Dict[str, Any] = {}
+            if direction is not None:
+                range_kwargs["direction"] = str(direction)
+            if scale is not None:
+                range_kwargs["scale"] = int(scale)
+            if amplitude is not None:
+                range_kwargs["amplitude"] = int(amplitude)
+            if octaves is not None:
+                range_kwargs["octaves"] = int(octaves)
+            if smooth_iterations is not None:
+                range_kwargs["smooth_iterations"] = int(smooth_iterations)
+            if seed is not None:
+                range_kwargs["seed"] = int(seed)
+            result = generator.generate_mountain_range(cx1, cy1, cz1, cx2, cy2, cz2, **range_kwargs)
 
         elif terrain_type == "plateau":
-            kwargs = {"x1": x1, "y1": y1, "z1": z1, "x2": x2, "y2": y2, "z2": z2}
-            if height:
-                kwargs["height"] = height
-            if smooth_iterations:
-                kwargs["smooth_iterations"] = smooth_iterations
-            if seed:
-                kwargs["seed"] = seed
-            result = generator.generate_plateau(**kwargs)
+            plateau_kwargs: Dict[str, Any] = {}
+            if height is not None:
+                plateau_kwargs["height"] = int(height)
+            if smooth_iterations is not None:
+                plateau_kwargs["smooth_iterations"] = int(smooth_iterations)
+            if seed is not None:
+                plateau_kwargs["seed"] = int(seed)
+            result = generator.generate_plateau(cx1, cy1, cz1, cx2, cy2, cz2, **plateau_kwargs)
 
         else:
             return [TextContent(type="text", text=f"❌ Unknown terrain type: {terrain_type}")]
@@ -144,7 +147,7 @@ async def handle_generate_terrain(
 
 
 async def handle_texture_terrain(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle texture_terrain tool."""
     from ..terrain_generation import TerrainGenerator
@@ -155,7 +158,11 @@ async def handle_texture_terrain(
 
     try:
         generator = TerrainGenerator(rcon)
-        result = generator.texture_natural_slopes(x1, y1, z1, x2, y2, z2, style)
+        result = generator.texture_natural_slopes(
+            int(x1 or 0), int(y1 or 0), int(z1 or 0),
+            int(x2 or 0), int(y2 or 0), int(z2 or 0),
+            str(style) if style is not None else "temperate",
+        )
 
         if not result.get("success"):
             return [
@@ -164,7 +171,7 @@ async def handle_texture_terrain(
 
         # Format output
         output = "🎨 Terrain Texturing Complete\n\n"
-        output += f"**Style:** {style.title()}\n"
+        output += f"**Style:** {style.title() if style is not None else 'temperate'}\n"
         output += f"**Summary:** {result['summary']}\n\n"
 
         recipe = result.get("recipe", {})
@@ -191,7 +198,7 @@ async def handle_texture_terrain(
 
 
 async def handle_smooth_terrain(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle smooth_terrain tool."""
     from ..terrain_generation import TerrainGenerator
@@ -205,7 +212,7 @@ async def handle_smooth_terrain(
         generator = TerrainGenerator(rcon)
 
         # Set selection first
-        select_result = generator.set_selection(x1, y1, z1, x2, y2, z2)
+        select_result = generator.set_selection(int(x1 or 0), int(y1 or 0), int(z1 or 0), int(x2 or 0), int(y2 or 0), int(z2 or 0))
         if not select_result.get("success"):
             return [
                 TextContent(

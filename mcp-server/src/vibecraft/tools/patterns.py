@@ -5,7 +5,7 @@ Building and terrain pattern lookup and placement.
 """
 
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from mcp.types import TextContent
 
 from .pattern_lookup_base import PatternLookupHandler
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_building_pattern_lookup(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle building_pattern_lookup tool.
@@ -44,7 +44,7 @@ async def handle_building_pattern_lookup(
 
 
 async def handle_place_building_pattern(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle place_building_pattern tool.
@@ -104,9 +104,9 @@ async def handle_place_building_pattern(
     try:
         commands = PatternPlacer.get_placement_commands(
             pattern=structured,
-            origin_x=int(origin_x),
-            origin_y=int(origin_y),
-            origin_z=int(origin_z),
+            origin_x=int(origin_x or 0),
+            origin_y=int(origin_y or 0),
+            origin_z=int(origin_z or 0),
             facing=facing,
         )
     except ValueError as exc:
@@ -211,7 +211,7 @@ async def handle_place_building_pattern(
 
 
 async def handle_terrain_pattern_lookup(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle terrain_pattern_lookup tool.

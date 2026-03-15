@@ -9,11 +9,12 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Sequence, List
+from typing import Any, Dict, Sequence, List, cast
 
 from mcp.server import Server
 from mcp.types import Resource, Tool, TextContent
 import mcp.server.stdio
+from pydantic import AnyUrl
 
 from .config import load_config, VibeCraftConfig
 from .client_bridge import ClientBridge
@@ -256,37 +257,37 @@ async def list_resources() -> list[Resource]:
     """List available documentation resources for AI"""
     return [
         Resource(
-            uri="vibecraft://guide/patterns",
+            uri=cast(AnyUrl, "vibecraft://guide/patterns"),
             name="WorldEdit Pattern Syntax Guide",
             mimeType="text/markdown",
             description="Complete guide to WorldEdit pattern syntax with examples",
         ),
         Resource(
-            uri="vibecraft://guide/masks",
+            uri=cast(AnyUrl, "vibecraft://guide/masks"),
             name="WorldEdit Mask Syntax Guide",
             mimeType="text/markdown",
             description="Complete guide to WorldEdit mask syntax with examples",
         ),
         Resource(
-            uri="vibecraft://guide/expressions",
+            uri=cast(AnyUrl, "vibecraft://guide/expressions"),
             name="WorldEdit Expression Syntax Guide",
             mimeType="text/markdown",
             description="Complete guide to WorldEdit expression syntax with examples",
         ),
         Resource(
-            uri="vibecraft://guide/coordinates",
+            uri=cast(AnyUrl, "vibecraft://guide/coordinates"),
             name="WorldEdit Coordinate System Guide",
             mimeType="text/markdown",
             description="Guide to coordinate systems and console command syntax",
         ),
         Resource(
-            uri="vibecraft://guide/workflows",
+            uri=cast(AnyUrl, "vibecraft://guide/workflows"),
             name="Common WorldEdit Workflows",
             mimeType="text/markdown",
             description="Common building workflows and command sequences",
         ),
         Resource(
-            uri="vibecraft://guide/player-context",
+            uri=cast(AnyUrl, "vibecraft://guide/player-context"),
             name="Player Context Commands Warning",
             mimeType="text/markdown",
             description="Important information about commands that require player context",
@@ -332,7 +333,7 @@ async def call_tool(name: str, arguments: Any) -> Sequence[TextContent]:
             return [TextContent(type="text", text=f"❌ Unknown tool: {name}")]
 
         # Call handler with standard parameters
-        return await handler(arguments, rcon, config, logger)
+        return cast(list[TextContent], await handler(arguments, rcon, config, logger))
 
     except Exception as e:
         logger.error(f"Error in tool {name}: {str(e)}", exc_info=True)

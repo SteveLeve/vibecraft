@@ -9,7 +9,7 @@ import random
 import threading
 import time
 import uuid
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from websocket import create_connection
 from websocket import WebSocketTimeoutException, WebSocketConnectionClosedException
@@ -254,6 +254,8 @@ class ClientBridge:
                 self._pending_request_ids.add(request_id)
 
             with self._request_lock:
+                if self._connection is None:
+                    raise ClientBridgeConnectionError("Connection lost before send")
                 self._connection.send(json.dumps(message))
 
             with self._pending_condition:
@@ -409,7 +411,7 @@ class ClientBridge:
         try:
             response = self._request("server.info", {})
             if response.get("ok") and isinstance(response.get("result"), dict):
-                return response["result"]
+                return cast(Dict[str, str], response["result"])
         except Exception:
             pass
 
@@ -481,7 +483,7 @@ class ClientBridge:
         )
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Screenshot failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def capture_screenshot_async(
         self, max_width: int = 1920, max_height: int = 1080
@@ -516,7 +518,7 @@ class ClientBridge:
         )
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Region scan failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def scan_region_async(
         self,
@@ -539,7 +541,7 @@ class ClientBridge:
         )
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Heightmap failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def get_heightmap_async(self, x1: int, z1: int, x2: int, z2: int) -> Dict[str, Any]:
         """Async wrapper for get_heightmap."""
@@ -552,7 +554,7 @@ class ClientBridge:
         response = self._request("player.context", {"reach": reach})
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Player context failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def get_player_context_async(self, reach: float = 128.0) -> Dict[str, Any]:
         """Async wrapper for get_player_context."""
@@ -563,7 +565,7 @@ class ClientBridge:
         response = self._request("player.entities", {"radius": radius})
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Nearby entities failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def get_nearby_entities_async(self, radius: float = 32.0) -> Dict[str, Any]:
         """Async wrapper for get_nearby_entities."""
@@ -579,7 +581,7 @@ class ClientBridge:
         )
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Palette analysis failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def analyze_palette_async(
         self, x: int, y: int, z: int, radius: int = 16
@@ -597,7 +599,7 @@ class ClientBridge:
         )
         if not response.get("ok", True):
             raise ClientBridgeProtocolError(response.get("error", "Palette region failed"))
-        return response.get("result", {})
+        return cast(Dict[str, Any], response.get("result", {}))
 
     async def analyze_palette_region_async(
         self, x1: int, y1: int, z1: int, x2: int, y2: int, z2: int

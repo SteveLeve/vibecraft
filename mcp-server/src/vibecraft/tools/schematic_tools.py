@@ -594,8 +594,8 @@ def parse_schematic(
     # Normalize compact format to standard format
     schematic = normalize_schematic(schematic)
 
-    commands = []
-    stats = {
+    commands: list[str] = []
+    stats: Dict[str, Any] = {
         "blocks_placed": 0,
         "layers": 0,
         "errors": [],
@@ -745,7 +745,7 @@ def optimize_commands(commands: List[str]) -> List[str]:
     # Group blocks by block type for efficient processing
     by_type: Dict[str, List[Dict]] = {}
     for b in blocks:
-        block_type = b["block"]
+        block_type: str = str(b["block"])
         if block_type not in by_type:
             by_type[block_type] = []
         by_type[block_type].append(b)
@@ -859,7 +859,7 @@ def optimize_commands_aggressive(commands: List[str]) -> List[str]:
     # Group by block type
     by_type: Dict[str, set] = {}
     for b in blocks:
-        block_type = b["block"]
+        block_type = str(b["block"])
         if block_type not in by_type:
             by_type[block_type] = set()
         by_type[block_type].add((b["x"], b["y"], b["z"]))
@@ -928,7 +928,7 @@ def find_max_rectangle(
 
 
 async def handle_build_schematic(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """
     Handle the build_schematic tool.
@@ -1054,8 +1054,8 @@ async def handle_build_schematic(
     if errors:
         result_lines.append("")
         result_lines.append("**Errors:**")
-        for e in errors[:5]:
-            result_lines.append(f"  ❌ {e}")
+        for err in errors[:5]:
+            result_lines.append(f"  ❌ {err}")
         if len(errors) > 5:
             result_lines.append(f"  ... and {len(errors) - 5} more")
     else:

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 
 @dataclass
@@ -38,11 +38,11 @@ class BuildWorkflowCoordinator:
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state = self._load_state()
 
-    def _load_state(self) -> Dict[str, object]:
+    def _load_state(self) -> Dict[str, Any]:
         if self.state_path.exists():
             try:
                 with open(self.state_path, "r", encoding="utf-8") as handle:
-                    return json.load(handle)
+                    return cast(Dict[str, Any], json.load(handle))
             except Exception:
                 pass
         return {
@@ -66,13 +66,13 @@ class BuildWorkflowCoordinator:
         phase = self.get_phase(identifier)
         return phase or self.PHASES[0]
 
-    def record_validation(self, validation_type: str, payload: Dict[str, object]) -> None:
+    def record_validation(self, validation_type: str, payload: Dict[str, Any]) -> None:
         validations = self.state.setdefault("validations", {})
         entries = validations.setdefault(validation_type, [])
         entries.append(payload)
         self._save_state()
 
-    def get_status(self) -> Dict[str, object]:
+    def get_status(self) -> Dict[str, Any]:
         phase_status = []
         current = self.current_phase().identifier
         completed = set(self.state.get("completed_phases", []))
@@ -102,7 +102,7 @@ class BuildWorkflowCoordinator:
             "validations": self.state.get("validations", {}),
         }
 
-    def can_advance(self) -> Dict[str, object]:
+    def can_advance(self) -> Dict[str, Any]:
         phase = self.current_phase()
         validations = self.state.get("validations", {})
         missing = [
@@ -112,7 +112,7 @@ class BuildWorkflowCoordinator:
         ]
         return {"ok": not missing, "missing": missing, "phase": phase.identifier}
 
-    def advance(self) -> Dict[str, object]:
+    def advance(self) -> Dict[str, Any]:
         check = self.can_advance()
         if not check["ok"]:
             return {
