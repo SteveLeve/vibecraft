@@ -31,7 +31,7 @@ class TerrainAnalyzer:
     NATURAL_SURFACE_BLOCKS = BlockCategories.NATURAL_SURFACE_BLOCKS
     HAZARD_BLOCKS = BlockCategories.HAZARD_BLOCKS
 
-    def __init__(self, rcon_manager):
+    def __init__(self, rcon_manager: Any) -> None:
         """Initialize the terrain analyzer."""
         self.rcon = rcon_manager
 
@@ -257,7 +257,7 @@ class TerrainAnalyzer:
         - Use vertical slices to find surface quickly
         - Returns list of (x, y, z) tuples
         """
-        samples = []
+        samples: List[Tuple[int, int, int]] = []
         samples_taken = 0
 
         # Calculate step size

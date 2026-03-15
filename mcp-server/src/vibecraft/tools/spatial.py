@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_spatial_awareness_scan(
-    arguments: Dict[str, Any], rcon, config, logger_instance: logging.Logger
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: logging.Logger
 ) -> List[TextContent]:
     """
     Handle spatial_awareness_scan tool - Advanced V2 spatial analysis.

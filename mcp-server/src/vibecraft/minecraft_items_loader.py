@@ -8,7 +8,7 @@ and exposes it for use by tools and the main server.
 import json
 import logging
 from .paths import DATA_DIR
-from typing import List, Dict, Any, Set, Optional, Tuple
+from typing import List, Dict, Any, Set, Optional, Tuple, cast
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def load_minecraft_items() -> List[Dict[str, Any]]:
 
     try:
         with open(items_file) as f:
-            items = json.load(f)
+            items = cast(List[Dict[str, Any]], json.load(f))
         logger.info(f"Loaded {len(items)} Minecraft items from database")
         return items
     except Exception as e:

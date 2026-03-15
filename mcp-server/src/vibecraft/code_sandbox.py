@@ -337,10 +337,10 @@ def validate_code_ast(
 
 
 @contextmanager
-def _timeout_context(seconds: int):
+def _timeout_context(seconds: int) -> Any:
     """Context manager for timeout enforcement on Unix systems."""
 
-    def _timeout_handler(signum, frame):
+    def _timeout_handler(signum: int, frame: Any) -> None:
         raise SandboxTimeoutError(f"Code execution timed out after {seconds} seconds")
 
     # Only use signal-based timeout on Unix (not Windows)
@@ -365,7 +365,7 @@ def _create_safe_namespace() -> Dict[str, Any]:
     """
 
     # Create safe wrappers for some functions to prevent abuse
-    def safe_range(*args):
+    def safe_range(*args: Any) -> range:
         """Safe range that limits maximum size."""
         if len(args) == 1:
             stop = args[0]
@@ -392,7 +392,7 @@ def _create_safe_namespace() -> Dict[str, Any]:
         else:
             raise CodeSandboxError("range takes 1-3 arguments")
 
-    def safe_print(*args, **kwargs):
+    def safe_print(*args: Any, **kwargs: Any) -> None:
         """Safe print that does nothing (prevents output abuse)."""
         pass  # Silently ignore - we don't want arbitrary output
 

@@ -18,13 +18,13 @@ Tool Registry:
     Import this in server.py to dispatch tool calls.
 """
 
-from typing import Dict, Callable
+from typing import Dict, Callable, Any
 
 # Tool registry - will be populated by importing modules
 TOOL_REGISTRY: Dict[str, Callable] = {}
 
 
-def register_tool(name: str):
+def register_tool(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Decorator to register a tool handler.
 
@@ -34,7 +34,7 @@ def register_tool(name: str):
             ...
     """
 
-    def decorator(func: Callable):
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         TOOL_REGISTRY[name] = func
         return func
 
@@ -113,8 +113,8 @@ TOOL_REGISTRY["build_schematic"] = schematic_tools.handle_build_schematic
 # Each WorldEdit tool uses the generic handler with its tool_name
 for tool_name in core_tools.WORLD_EDIT_TOOL_PREFIXES.keys():
     # Create a closure to capture the tool_name
-    def make_worldedit_handler(name):
-        async def handler(arguments, rcon, config, logger_instance):
+    def make_worldedit_handler(name: str) -> Callable[..., Any]:
+        async def handler(arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any) -> Any:
             return await core_tools.handle_worldedit_generic(
                 arguments, rcon, config, logger_instance, name
             )

@@ -45,7 +45,7 @@ class CircleCalculator:
             z = radius
             d = 3 - 2 * radius
 
-            def add_circle_points(cx, cz, x, z):
+            def add_circle_points(cx: int, cz: int, x: int, z: int) -> List[Tuple[int, int]]:
                 """Add 8-way symmetric points"""
                 points = [
                     (cx + x, cz + z),

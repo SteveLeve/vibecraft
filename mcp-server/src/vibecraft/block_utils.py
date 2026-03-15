@@ -12,7 +12,7 @@ from .command_patterns import BLOCK_STATE_PATTERN
 logger = logging.getLogger(__name__)
 
 
-def fetch_block_state(executor, x: int, y: int, z: int) -> Optional[Dict[str, Any]]:
+def fetch_block_state(executor: Any, x: int, y: int, z: int) -> Optional[Dict[str, Any]]:
     """Fetch block state (id + properties) at coordinates via command execution.
 
     Note: This uses 'data get block' which only returns data for tile entities

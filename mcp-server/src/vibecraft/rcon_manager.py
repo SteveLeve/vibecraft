@@ -15,7 +15,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any, cast
 
 from mcrcon import MCRcon
 
@@ -257,7 +257,7 @@ class RCONManager:
                     logger.info(f"Response: {response}")
 
                 self._record_success()
-                return response
+                return cast(str, response)
 
             except (BrokenPipeError, ConnectionResetError, OSError) as e:
                 # Connection lost, try to reconnect
@@ -375,12 +375,11 @@ class RCONManager:
             self._close_connection_unsafe()
         logger.info("RCON manager closed")
 
-    def __enter__(self):
+    def __enter__(self) -> "RCONManager":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.close()
-        return False
 
     # Backwards-compatibility alias
     def send_command(self, command: str) -> str:

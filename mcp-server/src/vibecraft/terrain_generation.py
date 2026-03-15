@@ -24,7 +24,7 @@ class TerrainGenerator:
     All operations are console-safe (no player clicks required).
     """
 
-    def __init__(self, rcon):
+    def __init__(self, rcon: Any) -> None:
         self.rcon = rcon
 
         # Safety limits

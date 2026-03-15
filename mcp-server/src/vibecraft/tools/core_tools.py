@@ -5,7 +5,7 @@ This module contains handlers for core operations including command execution,
 server info, schematics, templates, and generic WorldEdit commands.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from mcp.types import TextContent
 import json
 
@@ -55,7 +55,7 @@ def prepare_worldedit_command(tool_name: str, command: str) -> str:
 
 
 async def handle_rcon_command(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle rcon_command tool - base command execution."""
     from ..sanitizer import (
@@ -81,7 +81,7 @@ async def handle_rcon_command(
                 )
             ]
 
-        command = validation.sanitized_command
+        command = validation.sanitized_command or ""
 
         # Check coordinate bounds if configured
         bounds_validation = validate_coordinates_in_bounds(
@@ -122,7 +122,7 @@ async def handle_rcon_command(
 
 
 async def handle_worldedit_generic(
-    arguments: Dict[str, Any], rcon, config, logger_instance, tool_name: str
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any, tool_name: str
 ) -> List[TextContent]:
     """Handle generic WorldEdit commands (20 tools via WORLD_EDIT_TOOL_PREFIXES)."""
     command = arguments.get("command", "").strip()
@@ -137,7 +137,7 @@ async def handle_worldedit_generic(
 
 
 async def handle_get_server_info(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle get_server_info tool."""
     info = rcon.get_server_info()
@@ -166,7 +166,7 @@ async def handle_get_server_info(
 
 
 async def handle_building_template(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle building_template tool."""
     action = arguments.get("action")
@@ -190,7 +190,7 @@ async def handle_building_template(
         result_text = f"📚 **Building Templates Library** ({len(templates)} templates)\n\n"
 
         # Group by category
-        by_category = {}
+        by_category: Dict[str, List[Any]] = {}
         for tid, tmpl in templates.items():
             cat = tmpl["metadata"]["category"]
             if cat not in by_category:

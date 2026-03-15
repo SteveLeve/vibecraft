@@ -13,7 +13,7 @@ from ..command_patterns import PLAYER_POS_PATTERN, PLAYER_ROT_PATTERN
 
 
 async def handle_search_minecraft_item(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle search_minecraft_item tool."""
     from ..minecraft_items_loader import minecraft_items
@@ -85,7 +85,7 @@ async def handle_search_minecraft_item(
 
 
 async def handle_get_player_position(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle get_player_position tool."""
     player_name = arguments.get("player_name", "").strip()
@@ -286,7 +286,7 @@ Player facing {direction} - structure front should face this direction for align
 
 
 async def handle_get_surface_level(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle get_surface_level tool."""
     x = arguments["x"]

@@ -12,7 +12,7 @@ from ..command_patterns import PLAYER_POS_PATTERN
 
 
 async def handle_worldedit_generation_smart(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """
     Handle WorldEdit generation commands with automatic selection setup.

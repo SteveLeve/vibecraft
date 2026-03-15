@@ -10,7 +10,7 @@ from mcp.types import TextContent
 
 
 async def handle_calculate_shape(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle calculate_shape tool."""
     from ..geometric_algorithms import CircleCalculator

@@ -118,7 +118,7 @@ def has_worldedit_commands(commands: List[str]) -> bool:
 
 
 async def handle_build(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """
     Handle build tool.

@@ -14,7 +14,7 @@ Performance: 3-5 seconds typical (was 30+ seconds)
 
 import logging
 import re
-from typing import Dict, Optional, Any
+from typing import Dict, List, Optional, Any
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class SpatialAnalyzerV2:
     Performance target: <2 seconds for any detail level.
     """
 
-    def __init__(self, rcon_manager):
+    def __init__(self, rcon_manager: Any) -> None:
         """Initialize with command executor."""
         self.rcon = rcon_manager
 
@@ -212,8 +212,8 @@ class SpatialAnalyzerV2:
         self, floor_y: Optional[int], ceiling_y: Optional[int], center_y: int
     ) -> Dict[str, Any]:
         """Generate placement recommendations."""
-        recs = {}
-        warnings = []
+        recs: Dict[str, Any] = {}
+        warnings: List[str] = []
 
         if floor_y is not None:
             recs["floor_placement_y"] = floor_y + 1  # ON TOP of floor

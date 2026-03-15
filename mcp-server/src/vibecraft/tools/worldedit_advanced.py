@@ -10,7 +10,7 @@ from mcp.types import TextContent
 
 
 async def handle_worldedit_deform(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle worldedit_deform tool."""
     expression = arguments.get("expression", "").strip()
@@ -36,7 +36,7 @@ async def handle_worldedit_deform(
 
 
 async def handle_worldedit_vegetation(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle worldedit_vegetation tool."""
     cmd = arguments.get("command")
@@ -139,7 +139,7 @@ async def handle_worldedit_vegetation(
 
 
 async def handle_worldedit_terrain_advanced(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle worldedit_terrain_advanced tool."""
     cmd = arguments.get("command")
@@ -208,7 +208,7 @@ async def handle_worldedit_terrain_advanced(
 
 
 async def handle_worldedit_analysis(
-    arguments: Dict[str, Any], rcon, config, logger_instance
+    arguments: Dict[str, Any], rcon: Any, config: Any, logger_instance: Any
 ) -> List[TextContent]:
     """Handle worldedit_analysis tool."""
     cmd = arguments.get("command")

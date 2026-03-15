@@ -10,7 +10,7 @@ Protocol Reference: docs/CLIENT_BRIDGE_PROTOCOL.md
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, Union
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
 # =============================================================================
@@ -69,7 +69,7 @@ class ResponseEnvelope(BaseModel):
 
     @field_validator("error")
     @classmethod
-    def validate_error_present_on_failure(cls, v: Optional[str], info) -> Optional[str]:
+    def validate_error_present_on_failure(cls, v: Optional[str], info: ValidationInfo) -> Optional[str]:
         """Ensure error is present when ok=False."""
         # Access ok from the data being validated
         if hasattr(info, "data") and info.data.get("ok") is False and not v:
