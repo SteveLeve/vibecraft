@@ -97,6 +97,34 @@ If you prefer not to use the build script:
    - Close the edit dialog
    - Click "Launch"
 
+### Using CurseForge
+
+1. **Create a custom profile:**
+   - Click "Create Custom Profile"
+   - Select your Minecraft version
+   - Name it (for example, "VibeCraft")
+   - Click "Create"
+
+2. **Switch the profile to Fabric:**
+   - Open the profile
+   - Open the profile options or three-dot menu
+   - Choose the mod loader settings
+   - Select "Fabric" for your Minecraft version
+
+3. **Install Fabric API:**
+   - Click "Add More Content"
+   - Search for "Fabric API"
+   - Install the matching version for your profile
+
+4. **Install VibeCraft:**
+   - Open the profile folder
+   - Open the `mods` folder
+   - Copy `vibecraft-client-0.1.0-mc<VERSION>.jar` into that folder
+
+5. **Launch:**
+   - Return to the CurseForge app
+   - Click "Play"
+
 ### Using Other Launchers
 
 1. Install Fabric Loader for your Minecraft version

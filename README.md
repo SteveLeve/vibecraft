@@ -69,13 +69,23 @@ Output: `build/release/vibecraft-client-0.1.0-mc1.21.1.jar`
 Run `./build.sh --list` to see all versions.
 </details>
 
-### 2. Install with Prism Launcher
+### 2. Install the Mod
+
+#### Prism Launcher
 
 1. **Create instance:** Add Instance → Select Minecraft version → OK
 2. **Add Fabric:** Edit → Version → Install Loader → Fabric → OK
 3. **Add Fabric API:** Mods → Download mods → Search "Fabric API" → Select → OK
 4. **Add VibeCraft:** Mods → Add file → Select `vibecraft-client-*.jar`
 5. **Launch** and join a world/server
+
+#### CurseForge
+
+1. **Create a custom profile:** Create Custom Profile → choose your Minecraft version → Create
+2. **Add Fabric:** Open the profile → click the three dots or profile options → choose to change the mod loader → select Fabric
+3. **Add Fabric API:** Open the profile → Add More Content → search for "Fabric API" → Install
+4. **Add VibeCraft:** Open the profile folder or `mods` folder and copy in `vibecraft-client-*.jar`
+5. **Launch** the profile and join a world/server
 
 ### 3. Enable AI Control
 
